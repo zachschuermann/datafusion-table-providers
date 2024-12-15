@@ -26,6 +26,7 @@ datafusion-federation = { version = "0.3.1", features = [
   "sql",
 ], optional = true }
 datafusion-proto = { version = "43", optional = true }
+delta_kernel = { version = "0.5.0", features = [ "default-engine" ], optional = true }
 duckdb = { version = "1.1.1", features = [
   "bundled",
   "r2d2",
@@ -97,6 +98,9 @@ tokio-stream = { version = "0.1.16", features = ["net"] }
 tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 
 [features]
+delta = [
+  "dep:delta_kernel"
+]
 duckdb = [
   "dep:duckdb",
   "dep:r2d2",
