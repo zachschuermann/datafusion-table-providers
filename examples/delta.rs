@@ -107,9 +107,11 @@ impl TableProvider for DeltaDataSource {
     }
 
     fn schema(&self) -> SchemaRef {
-        SchemaRef::new(Schema::new(vec![
-            Field::new("value", DataType::UInt32, false),
-        ]))
+        SchemaRef::new(Schema::new(vec![Field::new(
+            "value",
+            DataType::UInt32,
+            false,
+        )]))
     }
 
     fn table_type(&self) -> TableType {
@@ -204,7 +206,7 @@ impl ExecutionPlan for DeltaExec {
             .unwrap();
         dbg!(snapshot.version());
 
-        let schema = snapshot.schema();
+        // let schema = snapshot.schema();
 
         // TODO support predicate
         let scan = snapshot
@@ -228,9 +230,9 @@ impl ExecutionPlan for DeltaExec {
                     })?
                     .into();
                 if let Some(mask) = mask {
-                    // FIXME
-                    // Ok(filter_record_batch(&record_batch, &mask.into())?)
-                    Ok(record_batch)
+                    // FIXME: should use `FilterExec`?
+                    use datafusion::common::arrow::compute::filter_record_batch;
+                    Ok(filter_record_batch(&record_batch, &mask.into())?)
                 } else {
                     Ok(record_batch)
                 }
